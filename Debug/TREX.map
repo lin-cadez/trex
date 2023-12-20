@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm Wed Dec 20 13:21:03 2023
+AVRASM ver. 2.2.8  C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm Wed Dec 20 15:21:32 2023
 
 
 EQU  SIGNATURE_000 0000001e
@@ -700,26 +700,27 @@ CSEG delay_ms     000000b7
 CSEG LCD_init     00000067
 CSEG command_wrt  00000076
 CSEG loop         0000000a
-CSEG render       00000013
-CSEG logic        00000013
-CSEG game_over_check 00000015
-CSEG button_pressed_check 0000001c
-CSEG game_over_bus 0000001f
-CSEG set_first_row 00000020
-CSEG set_second_row 0000002a
-CSEG game_over    00000061
-CSEG fall_down    00000028
-CSEG render_trex  0000002d
-CSEG clear_first_row 00000036
-CSEG clear_second_row 00000030
+CSEG render       00000014
+CSEG logic        00000014
+CSEG game_over_check 00000016
+CSEG button_pressed_check 0000001d
+CSEG game_over_bus 00000020
+CSEG set_first_row 00000021
+CSEG set_second_row 0000002b
+CSEG game_over    00000062
+CSEG fall_down    00000029
+CSEG render_trex  0000002e
+CSEG clear_first_row 00000037
+CSEG clear_second_row 00000031
 CSEG set_cursor_position 000000d9
 CSEG data_wrt     0000008c
-CSEG render_trex_char 00000042
-CSEG render_cactus 00000047
+CSEG render_trex_char 00000043
+CSEG render_cactus 00000048
 CSEG set_cactus_position_onscreen 00000058
 CSEG render_delay 000000ce
 CSEG game_over_sign 00000104
 CSEG print_score  0000012d
+CSEG aftermath    00000066
 CSEG delay_short  000000ad
 CSEG delay_us     000000b0
 CSEG display_cactus 000000a1
@@ -736,7 +737,7 @@ CSEG set_cursor_position_compare 000000e8
 CSEG set_cursor_position_end 000000f0
 CSEG cursor_position_loop 000000ea
 CSEG random_number 000000f3
-CSEG convert_to_ascii 0000014a
-CSEG div          00000171
-CSEG div_loop     00000173
-CSEG terminate    00000177
+CSEG convert_to_ascii 00000152
+CSEG div          00000179
+CSEG div_loop     0000017b
+CSEG terminate    0000017f

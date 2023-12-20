@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm Wed Dec 20 13:21:03 2023
+AVRASM ver. 2.2.8  C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm Wed Dec 20 15:21:32 2023
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
@@ -1004,107 +1004,108 @@ AVRASM ver. 2.2.8  C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm Wed
                                  
                                  loop:
                                  	  //init values
-00000a e022                      	  ldi r18, 2  //trex position
+00000a e022                      	  ldi r18, 2  //trex position r0
 00000b 2e02                      	  mov r0, r18
-00000c e03d                      	  ldi r19, 13 //cactus poistion
+00000c e03d                      	  ldi r19, 13 //cactus poistion r1
 00000d 2e13                      	  mov r1, r19
-00000e e041                      	  ldi r20, 0x01
+00000e e041                      	  ldi r20, 0x01 //vrstica_setter r2
 00000f 2e24                      	  mov r2, r20
                                  
 000010 e060                      	  ldi r22, 0x00 //render_counter_total
-000011 e070                      	  ldi r23, 0x00 //cactus_counter_total
-000012 e080                      	  ldi r24, 0x00 //jump-render-length
+000011 e070                      	  ldi r23, 0 //last_jump_render
+000012 e080                      	  ldi r24, 0x00 //jump-length_counter (temp)
+000013 2433                      	  clr r3 //score counter
                                  
                                  	  render:
                                  		  logic:
                                  			
-000013 941a                      			dec r1
-000014 9563                      			inc r22
+000014 941a                      			dec r1
+000015 9563                      			inc r22
                                  			//game-over check
                                  			game_over_check:
-000015 2d02                      				mov r16, r2
-000016 3000                      				cpi r16, 0x00
-000017 f021                      				breq  button_pressed_check
+000016 2d02                      				mov r16, r2
+000017 3000                      				cpi r16, 0x00
+000018 f021                      				breq  button_pressed_check
                                  
-000018 2d00                      				mov r16, r0
-000019 950a                      				dec r16
-00001a 1501                      				cp r16, r1
-00001b f019                      				breq game_over_bus
+000019 2d00                      				mov r16, r0
+00001a 950a                      				dec r16
+00001b 1501                      				cp r16, r1
+00001c f019                      				breq game_over_bus
                                  					
                                  			//check for jump
                                  			button_pressed_check:
-00001c 991c                      				sbic PINb,4
-00001d c002                      				rjmp set_first_row
-00001e c00b                      				rjmp set_second_row
+00001d 991c                      				sbic PINb,4
+00001e c002                      				rjmp set_first_row
+00001f c00b                      				rjmp set_second_row
                                  
                                  			game_over_bus:
-00001f c041                      				rjmp game_over
+000020 c041                      				rjmp game_over
                                  			
                                  			set_first_row:
                                  
                                  				//jump-length check
-000020 2f08                      				mov r16, r24
-000021 3005                      				cpi r16, 0x05
-000022 f428                      				brcc fall_down 
+000021 2f08                      				mov r16, r24
+000022 3005                      				cpi r16, 0x5
+000023 f428                      				brcc fall_down 
                                  
                                  
                                  				//set first row
-000023 9583                      				inc r24
-000024 2f76                      				mov r23, r22
-000025 e040                      				ldi r20, 0x00
-000026 2e24                      				mov r2, r20
-000027 c005                      				rjmp render_trex
+000024 9583                      				inc r24
+000025 2f76                      				mov r23, r22
+000026 e040                      				ldi r20, 0x00
+000027 2e24                      				mov r2, r20
+000028 c005                      				rjmp render_trex
                                  
                                  				fall_down:
-000028 e080                      					ldi r24, 0x00
-000029 c000                      					rjmp set_second_row
+000029 e080                      					ldi r24, 0x00
+00002a c000                      					rjmp set_second_row
                                  
                                  
                                  			set_second_row:
-00002a e041                      				ldi r20, 0x01
-00002b 2e24                      				mov r2, r20
-00002c c000                      				rjmp render_trex
+00002b e041                      				ldi r20, 0x01
+00002c 2e24                      				mov r2, r20
+00002d c000                      				rjmp render_trex
                                  	
                                  		  render_trex:
-00002d 2d02                      			mov r16, r2
-00002e 3000                      			cpi r16, 0x00
-00002f f431                      			brne clear_first_row
+00002e 2d02                      			mov r16, r2
+00002f 3000                      			cpi r16, 0x00
+000030 f431                      			brne clear_first_row
                                  
                                  			clear_second_row:
-000030 2d00                      				mov r16, r0
-000031 e011                      				ldi r17, 0x01
-000032 d0a6                      				RCALL set_cursor_position
-000033 e200                      				ldi r16, ' ' //costum character
-000034 d057                      				RCALL data_wrt
-000035 c00c                      				rjmp render_trex_char
+000031 2d00                      				mov r16, r0
+000032 e011                      				ldi r17, 0x01
+000033 d0a5                      				RCALL set_cursor_position
+000034 e200                      				ldi r16, ' ' //costum character
+000035 d056                      				RCALL data_wrt
+000036 c00c                      				rjmp render_trex_char
                                  
                                  			clear_first_row:
-000036 2d00                      				mov r16, r0
-000037 e010                      				ldi r17, 0x00
-000038 d0a0                      				RCALL set_cursor_position
-000039 e200                      				ldi r16, ' ' //costum character
-00003a d051                      				RCALL data_wrt
+000037 2d00                      				mov r16, r0
+000038 e010                      				ldi r17, 0x00
+000039 d09f                      				RCALL set_cursor_position
+00003a e200                      				ldi r16, ' ' //costum character
+00003b d050                      				RCALL data_wrt
                                  
-00003b 2d00                      				mov r16, r0
-00003c 5001                      				subi r16, 1
-00003d e010                      				ldi r17, 0x00
-00003e d09a                      				RCALL set_cursor_position
-00003f e200                      				ldi r16, ' ' //costum character
-000040 d04b                      				RCALL data_wrt
+00003c 2d00                      				mov r16, r0
+00003d 5001                      				subi r16, 1
+00003e e010                      				ldi r17, 0x00
+00003f d099                      				RCALL set_cursor_position
+000040 e200                      				ldi r16, ' ' //costum character
+000041 d04a                      				RCALL data_wrt
                                  
-000041 c000                      				rjmp render_trex_char
+000042 c000                      				rjmp render_trex_char
                                  
                                  			render_trex_char:
-000042 2d00                      				mov r16, r0
-000043 2d12                      				mov r17, r2
-000044 d094                      				RCALL set_cursor_position
-000045 ef0c                      				ldi r16, 0b11111100 //TREX
-000046 d045                      				RCALL data_wrt
+000043 2d00                      				mov r16, r0
+000044 2d12                      				mov r17, r2
+000045 d093                      				RCALL set_cursor_position
+000046 ef0c                      				ldi r16, 0b11111100 //TREX
+000047 d044                      				RCALL data_wrt
                                  				//RCALL render_delay
                                  
                                  
                                  		  render_cactus:
-000047 9573                      		    inc r23
+                                 
 000048 e011                      			ldi r17, 0x01
 000049 2d01                      			mov r16, r1
 00004a d08e                      			RCALL set_cursor_position
@@ -1126,7 +1127,7 @@ AVRASM ver. 2.2.8  C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm Wed
 000054 3000                      		cpi r16, 0x00
 000055 f011                      		breq set_cactus_position_onscreen
 000056 d077                      		RCALL render_delay
-000057 cfbb                      		rjmp render
+000057 cfbc                      		rjmp render
                                  
                                  		set_cactus_position_onscreen:
 000058 e00f                      			ldi r16, 15
@@ -1138,20 +1139,19 @@ AVRASM ver. 2.2.8  C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm Wed
 00005d e200                      			ldi r16, ' '
 00005e d02d                      			RCALL data_wrt
 00005f d06e                      			RCALL render_delay
+000060 9433                      			inc r3  //poveèamo score
                                  
-000060 cfb2                            RJMP  render 
+                                 
+000061 cfb2                            RJMP  render 
                                  
                                  	  game_over:
-000061 940e 0104                 		call game_over_sign
+000062 940e 0104                 		call game_over_sign
                                  
-000063 940e 012d                 		call print_score
+000064 940e 012d                 		call print_score
                                  
-000065 d026                      		RCALL data_wrt
-                                 
-                                 
-                                 
-                                 
-000066 cffa                      		rjmp game_over
+                                 		aftermath:
+                                 			//naredi možnost reseta
+000066 cfff                      			rjmp aftermath
                                  
                                  
                                  
@@ -1412,74 +1412,86 @@ AVRASM ver. 2.2.8  C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm Wed
                                  
                                  
                                  
-00013c 2f07                      		mov r16, r23
-00013d d00c                      		RCALL convert_to_ascii
-00013e df8f                      		RCALL render_delay
+                                 		//zmanjšamo za 4, da ni prevelika cifra
+00013c 9436                      		lsr r3
+00013d 9436                      		lsr r3
                                  
-00013f 2f03                      		mov r16, r19
-000140 df4b                      		RCALL data_wrt
-000141 df8c                      		RCALL render_delay
+00013e 2f07                      		mov r16, r23
+00013f d012                      		RCALL convert_to_ascii
+000140 2f03                      		mov r16, r19
+000141 df4a                      		RCALL data_wrt
+000142 df74                      		RCALL delay_ms
                                  
-000142 2f02                      		mov r16, r18
-000143 df48                      		RCALL data_wrt
-000144 df89                      		RCALL render_delay
-                                 
-000145 2f01                      		mov r16, r17
+000143 2f07                      		mov r16, r23
+000144 d00d                      		RCALL convert_to_ascii
+000145 2f02                      		mov r16, r18
 000146 df45                      		RCALL data_wrt
-000147 df86                      		RCALL render_delay
+000147 df6f                      		RCALL delay_ms
                                  
-                                 		
+000148 2f07                      		mov r16, r23
+000149 d008                      		RCALL convert_to_ascii
+00014a 2f01                      		mov r16, r17
+00014b df40                      		RCALL data_wrt
+00014c df6a                      		RCALL delay_ms
                                  
-000148 e011                      		ldi r17, 0x01
-000149 9508                      		ret
+00014d e200                      		ldi r16, ' '
+00014e df3d                      		RCALL data_wrt
+00014f df67                      		RCALL delay_ms
+                                 	
+000150 e011                      		ldi r17, 0x01
+000151 9508                      		ret
                                  
                                  convert_to_ascii:
-00014a 920f                      	push r0
-00014b 921f                      	push r1
-00014c 2f10                      	mov r17, r16
-00014d 940e 0171                 	call div
-00014f 940e 0171                 	call div
-000151 933f                      	push r19
-000152 2f10                      	mov r17, r16
-000153 e02a                      	ldi r18, 10
-000154 9f23                      	mul r18, r19
-000155 2d40                      	mov r20, r0
-000156 940e 0171                 	call div
-000158 1b14                      	sub r17, r20
-000159 931f                      	push r17
+000152 920f                      	push r0
+000153 921f                      	push r1
+000154 2f10                      	mov r17, r16
+000155 940e 0179                 	call div
+000157 940e 0179                 	call div
+000159 933f                      	push r19
 00015a 2f10                      	mov r17, r16
-00015b 940e 0171                 	call div
-00015d e02a                      	ldi r18, 10
-00015e 9f12                      	mul r17, r18
-00015f 2d20                      	mov r18, r0
-000160 2f30                      	mov r19, r16
-000161 1b32                      	sub r19, r18
-000162 933f                      	push r19
-000163 2711                      	clr r17
-000164 2722                      	clr r18
-000165 2733                      	clr r19
-000166 e340                      	ldi r20, '0'
-000167 911f                      	pop r17 //lsb
-000168 912f                      	pop r18
-000169 913f                      	pop r19 //msb
-00016a 0f14                      	add r17, r20
-00016b 0f24                      	add r18, r20
-00016c 0f34                      	add r19, r20
-00016d 2744                      	clr r20
-00016e 901f                      	pop r1
-00016f 900f                      	pop r0
-000170 9508                      	ret
+00015b e02a                      	ldi r18, 10
+00015c 9f23                      	mul r18, r19
+00015d 2d40                      	mov r20, r0
+00015e 940e 0179                 	call div
+000160 1b14                      	sub r17, r20
+000161 931f                      	push r17
+000162 2f10                      	mov r17, r16
+000163 940e 0179                 	call div
+000165 e02a                      	ldi r18, 10
+000166 9f12                      	mul r17, r18
+000167 2d20                      	mov r18, r0
+000168 2f30                      	mov r19, r16
+000169 1b32                      	sub r19, r18
+00016a 933f                      	push r19
+00016b 2711                      	clr r17
+00016c 2722                      	clr r18
+00016d 2733                      	clr r19
+00016e e340                      	ldi r20, '0'
+00016f 911f                      	pop r17 //lsb
+000170 912f                      	pop r18
+000171 913f                      	pop r19 //msb
+000172 0f14                      	add r17, r20
+000173 0f24                      	add r18, r20
+000174 0f34                      	add r19, r20
+000175 2744                      	clr r20
+000176 901f                      	pop r1
+000177 900f                      	pop r0
+000178 9508                      	ret
                                  
                                  	div:
-000171 2733                      		clr r19
-000172 e02a                      		ldi r18, 10
+000179 2733                      		clr r19
+00017a e02a                      		ldi r18, 10
                                  		div_loop:
-000173 1b12                      			sub r17, r18
-000174 f010                      			brcs terminate
-000175 9533                      			inc r19	
-000176 cffc                      			rjmp div_loop
+00017b 1b12                      			sub r17, r18
+00017c f010                      			brcs terminate
+00017d 9533                      			inc r19	
+00017e cffc                      			rjmp div_loop
+                                 
                                  	terminate:
-000177 2f13                      		mov r17, r19
+00017f 2f13                      		mov r17, r19
+000180 9508                      		ret
+                                 
+                                 
 
 
 RESOURCE USE INFORMATION
@@ -1497,12 +1509,12 @@ counted separately from r26..r31 here.
 .dseg memory usage only counts static data declared with .byte
 
 "ATmega328P" register use summary:
-x  :   0 y  :   0 z  :   0 r0 :  11 r1 :  10 r2 :   6 r3 :   0 r4 :   0 
+x  :   0 y  :   0 z  :   0 r0 :  11 r1 :  10 r2 :   6 r3 :   4 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16: 112 r17:  27 r18:  18 r19:  17 r20:  24 
-r21:   9 r22:   8 r23:   5 r24:   4 r25:   0 r26:   0 r27:  18 r28:   0 
+r13:   0 r14:   0 r15:   0 r16: 115 r17:  27 r18:  18 r19:  17 r20:  24 
+r21:   9 r22:   8 r23:   6 r24:   4 r25:   0 r26:   0 r27:  18 r28:   0 
 r29:   0 r30:   0 r31:   0 
-Registers used: 13 out of 35 (37.1%)
+Registers used: 14 out of 35 (40.0%)
 
 "ATmega328P" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   6 add   :   4 adiw  :   0 and   :   0 
@@ -1511,25 +1523,25 @@ brcc  :   1 brcs  :   1 break :   0 breq  :   4 brge  :   0 brhc  :   0
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
 brne  :  11 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   6 cbi   :   6 cbr   :   0 
-clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   6 cls   :   0 
+clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   7 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   1 cpc   :   0 
 cpi   :   6 cpse  :   0 dec   :  11 eor   :   0 fmul  :   0 fmuls :   0 
 fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   5 jmp   :   0 
-ld    :   0 ldd   :   0 ldi   :  79 lds   :   0 lpm   :   0 lsl   :   1 
-lsr   :   0 mov   :  36 movw  :   0 mul   :   2 muls  :   0 mulsu :   0 
+ld    :   0 ldd   :   0 ldi   :  80 lds   :   0 lpm   :   0 lsl   :   1 
+lsr   :   2 mov   :  38 movw  :   0 mul   :   2 muls  :   0 mulsu :   0 
 neg   :   0 nop   :   3 or    :   0 ori   :   0 out   :   6 pop   :  18 
-push  :  18 rcall :  85 ret   :  15 reti  :   0 rjmp  :  16 rol   :   0 
+push  :  18 rcall :  87 ret   :  15 reti  :   0 rjmp  :  16 rol   :   0 
 ror   :   1 sbc   :   0 sbci  :   0 sbi   :   5 sbic  :   1 sbis  :   0 
 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
 sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   0 
 sub   :   3 subi  :   1 swap  :   9 tst   :   0 wdr   :   0 
-Instructions used: 31 out of 113 (27.4%)
+Instructions used: 32 out of 113 (28.3%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0002f2    754      0    754   32768   2.3%
+[.cseg] 0x000000 0x000302    770      0    770   32768   2.3%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

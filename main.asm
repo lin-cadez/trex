@@ -18,16 +18,17 @@ setup:
 
 loop:
 	  //init values
-	  ldi r18, 2  //trex position
+	  ldi r18, 2  //trex position r0
 	  mov r0, r18
-	  ldi r19, 13 //cactus poistion
+	  ldi r19, 13 //cactus poistion r1
 	  mov r1, r19
-	  ldi r20, 0x01
+	  ldi r20, 0x01 //vrstica_setter r2
 	  mov r2, r20
 
 	  ldi r22, 0x00 //render_counter_total
-	  ldi r23, 0x00 //cactus_counter_total
-	  ldi r24, 0x00 //jump-render-length
+	  ldi r23, 0 //last_jump_render
+	  ldi r24, 0x00 //jump-length_counter (temp)
+	  clr r3 //score counter
 
 	  render:
 		  logic:
@@ -58,7 +59,7 @@ loop:
 
 				//jump-length check
 				mov r16, r24
-				cpi r16, 0x05
+				cpi r16, 0x5
 				brcc fall_down 
 
 
@@ -118,7 +119,7 @@ loop:
 
 
 		  render_cactus:
-		    inc r23
+
 			ldi r17, 0x01
 			mov r16, r1
 			RCALL set_cursor_position
@@ -152,6 +153,8 @@ loop:
 			ldi r16, ' '
 			RCALL data_wrt
 			RCALL render_delay
+			inc r3  //poveèamo score
+
 
       RJMP  render 
 
@@ -160,12 +163,9 @@ loop:
 
 		call print_score
 
-		RCALL data_wrt
-
-
-
-
-		rjmp game_over
+		aftermath:
+			//naredi možnost reseta
+			rjmp aftermath
 
 
 
@@ -426,24 +426,32 @@ print_score:
 
 
 
+		//zmanjšamo za 4, da ni prevelika cifra
+		lsr r3
+		lsr r3
+
 		mov r16, r23
 		RCALL convert_to_ascii
-		RCALL render_delay
-
 		mov r16, r19
 		RCALL data_wrt
-		RCALL render_delay
+		RCALL delay_ms
 
+		mov r16, r23
+		RCALL convert_to_ascii
 		mov r16, r18
 		RCALL data_wrt
-		RCALL render_delay
+		RCALL delay_ms
 
+		mov r16, r23
+		RCALL convert_to_ascii
 		mov r16, r17
 		RCALL data_wrt
-		RCALL render_delay
+		RCALL delay_ms
 
-		
-
+		ldi r16, ' '
+		RCALL data_wrt
+		RCALL delay_ms
+	
 		ldi r17, 0x01
 		ret
 
@@ -492,6 +500,9 @@ convert_to_ascii:
 			brcs terminate
 			inc r19	
 			rjmp div_loop
+
 	terminate:
 		mov r17, r19
 		ret
+
+
