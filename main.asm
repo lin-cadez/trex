@@ -19,7 +19,7 @@ setup:
 loop:
 	  //init values
 	  SBI PORTB, 2 //BACKLIGHT ON
-	  ldi r18, 5  //trex position r0
+	  ldi r18, 1  //trex position r0
 	  mov r0, r18
 	  ldi r19, 13 //cactus poistion r1
 	  mov r1, r19

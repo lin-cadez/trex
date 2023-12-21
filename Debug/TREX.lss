@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm Thu Dec 21 21:29:07 2023
+AVRASM ver. 2.2.8  C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm Thu Dec 21 22:09:42 2023
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
@@ -1004,8 +1004,8 @@ AVRASM ver. 2.2.8  C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm Thu
                                  
                                  loop:
                                  	  //init values
-00000a 9a2a                      	  SBI   PORTB, 2 //BACKLIGHT ON
-00000b e025                      	  ldi r18, 5  //trex position r0
+00000a 9a2a                      	  SBI PORTB, 2 //BACKLIGHT ON
+00000b e021                      	  ldi r18, 1  //trex position r0
 00000c 2e02                      	  mov r0, r18
 00000d e03d                      	  ldi r19, 13 //cactus poistion r1
 00000e 2e13                      	  mov r1, r19
