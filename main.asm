@@ -1,7 +1,7 @@
 setup:
 
 	
-
+		
 	  LDI   R16, 0xFF
       OUT   DDRD, R16         ;set port D o/p for data
       LDI   R16, 0b11110111
@@ -18,23 +18,44 @@ setup:
 
 loop:
 	  //init values
-	  ldi r18, 2  //trex position r0
+	  SBI PORTB, 2 //BACKLIGHT ON
+	  ldi r18, 5  //trex position r0
 	  mov r0, r18
 	  ldi r19, 13 //cactus poistion r1
 	  mov r1, r19
-	  ldi r20, 0x01 //vrstica_setter r2
+	  ldi r20, 0x01 //vrstica_setter r2 trex
 	  mov r2, r20
 
 	  ldi r22, 0x00 //render_counter_total
 	  ldi r23, 0 //last_jump_render
-	  ldi r24, 0x00 //jump-length_counter (temp)
+	  ldi r24, 0x00 //jump-length(temp)
 	  clr r3 //score counter
 
+	  ldi r16, 255 //nastavimo r4 na 0xFF
+	  mov r4, r16  //r4 cactus speed register
+
+	  clr r16
+	  sts 0x0200, r16 //beleženje KIND and Enemy characterjev
+	  clr r16 inc r16
+	  sts 0x0201, r16 //beleženje BACKLIGHT ON/OFF
+
+
 	  render:
+			dec r4
+			mov r16, r4
+			RCALL render_delay
 		  logic:
 			
 			dec r1
 			inc r22
+
+			//you won check
+			game_won_check:
+				mov r16, r0
+				cpi r16, 14
+				brne game_over_check
+				rjmp GAME_ON
+
 			//game-over check
 			game_over_check:
 				mov r16, r2
@@ -45,37 +66,55 @@ loop:
 				dec r16
 				cp r16, r1
 				breq game_over_bus
+
 					
 			//check for jump
 			button_pressed_check:
+
+				in_jump_check:
+					cpi r24, 0x02
+					breq set_second_row
+					cpi r24, 0x01
+					breq set_second_row
+
+					cpi r24, 0x00
+					breq button_pressed_check_bridge
+					dec r24
+					rjmp set_first_row
+
+			button_pressed_check_bridge:
 				sbic PINb,4
-				rjmp set_first_row
+				rjmp button_press_jump
 				rjmp set_second_row
 
 			game_over_bus:
+				lds r16, 0x0200
+				cpi r16, 0b0000_0100
+				breq kind_character_touch
 				rjmp game_over
+
+			kind_character_touch:
+				inc r0
+				rjmp button_pressed_check
+
+			button_press_jump:
+				ldi r24, 0x04 //nastavimo dolžino JUMPA
+				rjmp set_first_row
 			
 			set_first_row:
-
-				//jump-length check
-				mov r16, r24
-				cpi r16, 0x5
-				brcc fall_down 
-
-
 				//set first row
-				inc r24
 				mov r23, r22
 				ldi r20, 0x00
 				mov r2, r20
 				rjmp render_trex
 
 				fall_down:
-					ldi r24, 0x00
+					clr r24
 					rjmp set_second_row
 
 
 			set_second_row:
+				clr r24
 				ldi r20, 0x01
 				mov r2, r20
 				rjmp render_trex
@@ -115,7 +154,6 @@ loop:
 				RCALL set_cursor_position
 				ldi r16, 0b11111100 //TREX
 				RCALL data_wrt
-				//RCALL render_delay
 
 
 		  render_cactus:
@@ -123,9 +161,25 @@ loop:
 			ldi r17, 0x01
 			mov r16, r1
 			RCALL set_cursor_position
-			ldi r16, 0b11111111 //costum character - glej v dorainov spreadsheet
-			RCALL data_wrt
 
+
+			//izbira costum characterja:
+
+			lds r16, 0x0200
+			cpi r16, 0b0000_0100
+			breq kind_char
+
+			enemy_char:
+				ldi r16, 0b0111_1111 
+				RCALL data_wrt
+				rjmp render_cactus_bridge
+
+			kind_char:
+				ldi r16, 0b1111_1111
+				RCALL data_wrt
+				rjmp render_cactus_bridge
+
+			render_cactus_bridge:
 			ldi r17, 0x01
 			mov r16, r1
 			inc r16
@@ -136,24 +190,43 @@ loop:
 
 
 
+		//check if backlight turned on/off
+		mov r16, r0
+		call remainder5
+		cpi r16, 0x00
+		brne backlight_on
+		cbi   PORTB, 2 //BACKLIGHT OFF
+		rjmp offscreen_check
+		
+
+		backlight_on:
+			sbi   PORTB, 2 //BACKLIGHT ON
+
+
+
 		//check if offscreen
+		offscreen_check:
 		mov r16, r1
 		cpi r16, 0x00
 		breq set_cactus_position_onscreen
-		RCALL render_delay
 		rjmp render
 
 		set_cactus_position_onscreen:
 			ldi r16, 15
 			mov r1, r16 
+		
+			lds r16, 0x0200
+			inc r16
+			andi r16, 0b0000_0111
+			sts 0x0200, r16
 
 			ldi r17, 0x01
 			ldi r16, 0x00
 			RCALL set_cursor_position
 			ldi r16, ' '
 			RCALL data_wrt
-			RCALL render_delay
 			inc r3  //poveèamo score
+
 
 
       RJMP  render 
@@ -165,6 +238,10 @@ loop:
 
 		aftermath:
 			//naredi možnost reseta
+			rjmp aftermath
+
+		GAME_ON:
+			call game_on_sign
 			rjmp aftermath
 
 
@@ -208,7 +285,6 @@ command_wrt:
       CBI   PORTB, 0          ;EN = 0 for H-to-L pulse
       RCALL delay_us          ;delay in micro seconds
 	  ;---------------------------------------------------
-	  RCALL delay_ms
 	  pop r27
 	  pop r16
       RET
@@ -237,20 +313,6 @@ data_wrt:
 	  pop r16
       RET
 ;================================================================
-display_cactus:
-	  push r16
-	  LDI R16, 0x10	
-	  RCALL command_wrt  
-	  RCALL delay_ms
-	  LDI   R16, ' '          ;display characters
-      RCALL data_wrt          ;via data register
-	  RCALL delay_ms
-	  LDI   R16, 0b11111100   ;display characters- Poglej v tabelo
-      RCALL data_wrt          ;via data register
-	  RCALL delay_ms
-	  pop r16
-      RET
-;================================================================
 delay_short:
       NOP
       NOP
@@ -274,35 +336,19 @@ l4:   RCALL delay_us
 	  pop r21
       RET
 ;================================================================
-delay_seconds:        ;nested loop subroutine (max delay 3.11s)
-	push r20
-	push r21
-	push r22
-    LDI   R20, 255    ;outer loop counter 
-l5: LDI   R21, 255    ;mid loop counter
-l6: LDI   R22, 20     ;inner loop counter to give 0.25s delay
-l7: DEC   R22         ;decrement inner loop
-    BRNE  l7          ;loop if not zero
-    DEC   R21         ;decrement mid loop
-    BRNE  l6          ;loop if not zero
-    DEC   R20         ;decrement outer loop
-    BRNE  l5          ;loop if not zero
-	pop r22
-	pop r21
-	pop r20
-    RET               ;return to caller
-;================================================================
 render_delay:
-    ldi  r18, 5
-    ldi r19, 10
-    ldi  r20, 39
-L1: dec  r20
-    brne L1
-    dec  r19
-    brne L1
-    dec  r18
-    brne L1
-    nop
+//input v r16 (0-255)
+
+	one_ms:
+			ldi  r18, 10
+			ldi  r19, 15
+		L1: dec  r19
+			brne L1
+			dec  r18
+			brne L1
+
+			dec r16
+			brne one_ms
 	ret
 ;================================================================
 set_cursor_position:
@@ -344,6 +390,7 @@ set_cursor_position:
 		pop r16
 		ret
 
+;--------------------------------------------
 random_number:
 	add r16, r19
 	swap r16
@@ -361,8 +408,10 @@ random_number:
 	swap r16
 	ror r16
 	swap r16
+	andi r16, 0b0000_1111
 	ret
-
+	
+;--------------------------------------------
 game_over_sign:
 	ldi r16, 0
 		RCALL set_cursor_position
@@ -406,6 +455,7 @@ game_over_sign:
 		RCALL data_wrt
 		ret
 
+;--------------------------------------------
 print_score:
 		clr r17
 		ldi r16, 0
@@ -425,24 +475,19 @@ print_score:
 		RCALL data_wrt
 
 
-
-		//zmanjšamo za 4, da ni prevelika cifra
-		lsr r3
-		lsr r3
-
-		mov r16, r23
+		mov r16, r3
 		RCALL convert_to_ascii
 		mov r16, r19
 		RCALL data_wrt
 		RCALL delay_ms
 
-		mov r16, r23
+		mov r16, r3
 		RCALL convert_to_ascii
 		mov r16, r18
 		RCALL data_wrt
 		RCALL delay_ms
 
-		mov r16, r23
+		mov r16, r3
 		RCALL convert_to_ascii
 		mov r16, r17
 		RCALL data_wrt
@@ -455,6 +500,49 @@ print_score:
 		ldi r17, 0x01
 		ret
 
+;--------------------------------------------
+
+game_on_sign:
+	ldi r16, 0
+		RCALL set_cursor_position
+		ldi r16, 'G'
+		RCALL data_wrt
+		ldi r16, 1
+		RCALL set_cursor_position
+		ldi r16, 'a'
+		RCALL data_wrt
+		ldi r16, 2
+		RCALL set_cursor_position
+		ldi r16, 'm'
+		RCALL data_wrt
+		ldi r16, 3
+		RCALL set_cursor_position
+		ldi r16, 'e'
+		RCALL data_wrt
+		ldi r16, 4
+		RCALL set_cursor_position
+		ldi r16, ' '
+		RCALL data_wrt
+		ldi r16, 5
+		RCALL set_cursor_position
+		ldi r16, 'O'
+		RCALL data_wrt
+		ldi r16, 6
+		RCALL set_cursor_position
+		ldi r16, 'N'
+		RCALL data_wrt
+		ldi r16, 7
+		RCALL set_cursor_position
+		ldi r16, ';'
+		RCALL data_wrt
+		ldi r16, 8
+		RCALL set_cursor_position
+		ldi r16, ')'
+		RCALL data_wrt
+		ret
+
+
+;--------------------------------------------
 convert_to_ascii:
 	push r0
 	push r1
@@ -504,5 +592,30 @@ convert_to_ascii:
 	terminate:
 		mov r17, r19
 		ret
+		
+;--------------------------------------------
+remainder5:
+		push r17
+		clr r17
 
+	remainder5_loop:
+		subi r16, 0x05
+		brcs remainder5_test
+		rjmp remainder5_loop
 
+		remainder5_test:
+			ldi r17, 0x05
+			add r16, r17
+			subi r16, 0x05
+			breq remainder5_true
+			rjmp remainder5_false
+		remainder5_true:
+			ldi r16, 0x00
+			pop r17
+			ret
+		remainder5_false:
+			ldi r17, 0x05
+			add r16, r17
+			pop r17
+			ret
+			
