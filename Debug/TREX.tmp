@@ -23,16 +23,16 @@
  </OUTPUT_FILES>
  <LABELS>
   <setup><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>1</LINE></setup>
-  <delay_ms><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>330</LINE></delay_ms>
-  <LCD_init><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>250</LINE></LCD_init>
-  <command_wrt><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>267</LINE></command_wrt>
+  <delay_ms><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>347</LINE></delay_ms>
+  <LCD_init><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>267</LINE></LCD_init>
+  <command_wrt><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>284</LINE></command_wrt>
   <loop><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>19</LINE></loop>
   <render><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>43</LINE></render>
-  <render_delay><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>339</LINE></render_delay>
+  <render_delay><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>356</LINE></render_delay>
   <logic><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>47</LINE></logic>
   <game_won_check><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>53</LINE></game_won_check>
   <game_over_check><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>60</LINE></game_over_check>
-  <GAME_ON><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>243</LINE></GAME_ON>
+  <GAME_ON><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>260</LINE></GAME_ON>
   <button_pressed_check><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>72</LINE></button_pressed_check>
   <game_over_bus><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>90</LINE></game_over_bus>
   <in_jump_check><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>74</LINE></in_jump_check>
@@ -46,40 +46,43 @@
   <fall_down><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>111</LINE></fall_down>
   <clear_first_row><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>135</LINE></clear_first_row>
   <clear_second_row><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>127</LINE></clear_second_row>
-  <set_cursor_position><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>354</LINE></set_cursor_position>
-  <data_wrt><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>292</LINE></data_wrt>
+  <set_cursor_position><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>371</LINE></set_cursor_position>
+  <data_wrt><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>309</LINE></data_wrt>
   <render_trex_char><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>151</LINE></render_trex_char>
   <render_cactus><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>159</LINE></render_cactus>
   <kind_char><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>177</LINE></kind_char>
   <enemy_char><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>172</LINE></enemy_char>
   <render_cactus_bridge><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>182</LINE></render_cactus_bridge>
-  <remainder5><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>597</LINE></remainder5>
+  <remainder5><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>614</LINE></remainder5>
   <backlight_on><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>202</LINE></backlight_on>
   <offscreen_check><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>208</LINE></offscreen_check>
   <set_cactus_position_onscreen><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>214</LINE></set_cactus_position_onscreen>
-  <game_over_sign><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>415</LINE></game_over_sign>
-  <print_score><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>459</LINE></print_score>
+  <game_over_sign><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>432</LINE></game_over_sign>
+  <print_score><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>476</LINE></print_score>
   <aftermath><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>239</LINE></aftermath>
-  <game_on_sign><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>505</LINE></game_on_sign>
-  <delay_short><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>316</LINE></delay_short>
-  <delay_us><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>321</LINE></delay_us>
-  <l3><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>324</LINE></l3>
-  <l4><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>333</LINE></l4>
-  <one_ms><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>342</LINE></one_ms>
-  <L1><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>345</LINE></L1>
-  <second_row><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>364</LINE></second_row>
-  <first_row><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>369</LINE></first_row>
-  <set_cursor_position_compare><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>375</LINE></set_cursor_position_compare>
-  <set_cursor_position_end><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>388</LINE></set_cursor_position_end>
-  <cursor_position_loop><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>380</LINE></cursor_position_loop>
-  <random_number><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>394</LINE></random_number>
-  <convert_to_ascii><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>546</LINE></convert_to_ascii>
-  <div><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>583</LINE></div>
-  <div_loop><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>586</LINE></div_loop>
-  <terminate><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>592</LINE></terminate>
-  <remainder5_loop><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>601</LINE></remainder5_loop>
-  <remainder5_test><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>606</LINE></remainder5_test>
-  <remainder5_true><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>612</LINE></remainder5_true>
-  <remainder5_false><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>616</LINE></remainder5_false>
+  <long_press_detection_loop><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>242</LINE></long_press_detection_loop>
+  <button_pressed_reset_activation><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>249</LINE></button_pressed_reset_activation>
+  <execute_reset><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>254</LINE></execute_reset>
+  <game_on_sign><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>522</LINE></game_on_sign>
+  <delay_short><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>333</LINE></delay_short>
+  <delay_us><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>338</LINE></delay_us>
+  <l3><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>341</LINE></l3>
+  <l4><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>350</LINE></l4>
+  <one_ms><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>359</LINE></one_ms>
+  <L1><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>362</LINE></L1>
+  <second_row><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>381</LINE></second_row>
+  <first_row><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>386</LINE></first_row>
+  <set_cursor_position_compare><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>392</LINE></set_cursor_position_compare>
+  <set_cursor_position_end><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>405</LINE></set_cursor_position_end>
+  <cursor_position_loop><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>397</LINE></cursor_position_loop>
+  <random_number><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>411</LINE></random_number>
+  <convert_to_ascii><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>563</LINE></convert_to_ascii>
+  <div><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>600</LINE></div>
+  <div_loop><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>603</LINE></div_loop>
+  <terminate><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>609</LINE></terminate>
+  <remainder5_loop><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>618</LINE></remainder5_loop>
+  <remainder5_test><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>623</LINE></remainder5_test>
+  <remainder5_true><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>629</LINE></remainder5_true>
+  <remainder5_false><FILE>C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm</FILE><LINE>633</LINE></remainder5_false>
  </LABELS>
 </ASSEMBLER_INFO>

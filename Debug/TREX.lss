@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm Thu Dec 21 22:09:42 2023
+AVRASM ver. 2.2.8  C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm Wed Dec 27 21:19:22 2023
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
@@ -993,13 +993,13 @@ AVRASM ver. 2.2.8  C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm Thu
 000002 ef07                            LDI   R16, 0b11110111
 000003 b904                            OUT   DDRB, R16         ;set port B o/p for command
 000004 9828                            CBI   PORTB, 0          ;EN = 0
-000005 d0d9                            RCALL delay_ms          ;wait for LCD power on
+000005 d0e6                            RCALL delay_ms          ;wait for LCD power on
                                        ;-----------------------------------------------------
-000006 d095                            RCALL LCD_init          ;subroutine to initialize LCD
+000006 d0a2                            RCALL LCD_init          ;subroutine to initialize LCD
                                        ;-----------------------------------------------------
 000007 e001                            LDI   R16, 0x01         ;clear LCD
-000008 d0a2                            RCALL command_wrt       ;send command code
-000009 d0d5                            RCALL delay_ms
+000008 d0af                            RCALL command_wrt       ;send command code
+000009 d0e2                            RCALL delay_ms
                                        ;-----------------------------------------------------
                                  
                                  loop:
@@ -1023,589 +1023,607 @@ AVRASM ver. 2.2.8  C:\Users\HP\Documents\Atmel Studio\7.0\TREX\TREX\main.asm Thu
 000017 2700                      	  clr r16
 000018 9300 0200                 	  sts 0x0200, r16 //beleženje KIND and Enemy characterjev
 00001a 2700
-00001b 9503                      	  clr r16 inc r16
+00001b 9503                      	  clr r16 inc r16 //nastavi na 1
 00001c 9300 0201                 	  sts 0x0201, r16 //beleženje BACKLIGHT ON/OFF
                                  
                                  
                                  	  render:
-00001e 944a                      			dec r4
-00001f 2d04                      			mov r16, r4
-000020 d0c5                      			RCALL render_delay
+00001e 944a
+00001f 944a
+000020 944a                      			dec r4 dec r4 dec r4; ZManjšamo za 3
+000021 2d04                      			mov r16, r4
+000022 d0d0                      			RCALL render_delay
                                  		  logic:
                                  			
-000021 941a                      			dec r1
-000022 9563                      			inc r22
+000023 941a                      			dec r1
+000024 9563                      			inc r22
                                  
                                  			//you won check
                                  			game_won_check:
-000023 2d00                      				mov r16, r0
-000024 300e                      				cpi r16, 14
-000025 f409                      				brne game_over_check
-000026 c072                      				rjmp GAME_ON
+000025 2d00                      				mov r16, r0
+000026 300e                      				cpi r16, 14
+000027 f409                      				brne game_over_check
+000028 c07d                      				rjmp GAME_ON
                                  
                                  			//game-over check
                                  			game_over_check:
-000027 2d02                      				mov r16, r2
-000028 3000                      				cpi r16, 0x00
-000029 f021                      				breq  button_pressed_check
+000029 2d02                      				mov r16, r2
+00002a 3000                      				cpi r16, 0x00
+00002b f021                      				breq  button_pressed_check
                                  
-00002a 2d00                      				mov r16, r0
-00002b 950a                      				dec r16
-00002c 1501                      				cp r16, r1
-00002d f059                      				breq game_over_bus
+00002c 2d00                      				mov r16, r0
+00002d 950a                      				dec r16
+00002e 1501                      				cp r16, r1
+00002f f059                      				breq game_over_bus
                                  
                                  					
                                  			//check for jump
                                  			button_pressed_check:
                                  
                                  				in_jump_check:
-00002e 3082                      					cpi r24, 0x02
-00002f f0c1                      					breq set_second_row
-000030 3081                      					cpi r24, 0x01
-000031 f0b1                      					breq set_second_row
+000030 3082                      					cpi r24, 0x02
+000031 f0c1                      					breq set_second_row
+000032 3081                      					cpi r24, 0x01
+000033 f0b1                      					breq set_second_row
                                  
-000032 3080                      					cpi r24, 0x00
-000033 f011                      					breq button_pressed_check_bridge
-000034 958a                      					dec r24
-000035 c00c                      					rjmp set_first_row
+000034 3080                      					cpi r24, 0x00
+000035 f011                      					breq button_pressed_check_bridge
+000036 958a                      					dec r24
+000037 c00c                      					rjmp set_first_row
                                  
                                  			button_pressed_check_bridge:
-000036 991c                      				sbic PINb,4
-000037 c008                      				rjmp button_press_jump
-000038 c00f                      				rjmp set_second_row
+000038 991c                      				sbic PINb,4
+000039 c008                      				rjmp button_press_jump
+00003a c00f                      				rjmp set_second_row
                                  
                                  			game_over_bus:
-000039 9100 0200                 				lds r16, 0x0200
-00003b 3004                      				cpi r16, 0b0000_0100
-00003c f009                      				breq kind_character_touch
-00003d c056                      				rjmp game_over
+00003b 9100 0200                 				lds r16, 0x0200
+00003d 3004                      				cpi r16, 0b0000_0100
+00003e f009                      				breq kind_character_touch
+00003f c056                      				rjmp game_over
                                  
                                  			kind_character_touch:
-00003e 9403                      				inc r0
-00003f cfee                      				rjmp button_pressed_check
+000040 9403                      				inc r0
+000041 cfee                      				rjmp button_pressed_check
                                  
                                  			button_press_jump:
-000040 e084                      				ldi r24, 0x04 //nastavimo dolžino JUMPA
-000041 c000                      				rjmp set_first_row
+000042 e084                      				ldi r24, 0x04 //nastavimo dolžino JUMPA
+000043 c000                      				rjmp set_first_row
                                  			
                                  			set_first_row:
                                  				//set first row
-000042 2f76                      				mov r23, r22
-000043 e040                      				ldi r20, 0x00
-000044 2e24                      				mov r2, r20
-000045 c006                      				rjmp render_trex
+000044 2f76                      				mov r23, r22
+000045 e040                      				ldi r20, 0x00
+000046 2e24                      				mov r2, r20
+000047 c006                      				rjmp render_trex
                                  
                                  				fall_down:
-000046 2788                      					clr r24
-000047 c000                      					rjmp set_second_row
+000048 2788                      					clr r24
+000049 c000                      					rjmp set_second_row
                                  
                                  
                                  			set_second_row:
-000048 2788                      				clr r24
-000049 e041                      				ldi r20, 0x01
-00004a 2e24                      				mov r2, r20
-00004b c000                      				rjmp render_trex
+00004a 2788                      				clr r24
+00004b e041                      				ldi r20, 0x01
+00004c 2e24                      				mov r2, r20
+00004d c000                      				rjmp render_trex
                                  	
                                  		  render_trex:
-00004c 2d02                      			mov r16, r2
-00004d 3000                      			cpi r16, 0x00
-00004e f431                      			brne clear_first_row
+00004e 2d02                      			mov r16, r2
+00004f 3000                      			cpi r16, 0x00
+000050 f431                      			brne clear_first_row
                                  
                                  			clear_second_row:
-00004f 2d00                      				mov r16, r0
-000050 e011                      				ldi r17, 0x01
-000051 d09d                      				RCALL set_cursor_position
-000052 e200                      				ldi r16, ' ' //costum character
-000053 d06c                      				RCALL data_wrt
-000054 c00c                      				rjmp render_trex_char
+000051 2d00                      				mov r16, r0
+000052 e011                      				ldi r17, 0x01
+000053 d0a8                      				RCALL set_cursor_position
+000054 e200                      				ldi r16, ' ' //costum character
+000055 d077                      				RCALL data_wrt
+000056 c00c                      				rjmp render_trex_char
                                  
                                  			clear_first_row:
-000055 2d00                      				mov r16, r0
-000056 e010                      				ldi r17, 0x00
-000057 d097                      				RCALL set_cursor_position
-000058 e200                      				ldi r16, ' ' //costum character
-000059 d066                      				RCALL data_wrt
+000057 2d00                      				mov r16, r0
+000058 e010                      				ldi r17, 0x00
+000059 d0a2                      				RCALL set_cursor_position
+00005a e200                      				ldi r16, ' ' //costum character
+00005b d071                      				RCALL data_wrt
                                  
-00005a 2d00                      				mov r16, r0
-00005b 5001                      				subi r16, 1
-00005c e010                      				ldi r17, 0x00
-00005d d091                      				RCALL set_cursor_position
-00005e e200                      				ldi r16, ' ' //costum character
-00005f d060                      				RCALL data_wrt
+00005c 2d00                      				mov r16, r0
+00005d 5001                      				subi r16, 1
+00005e e010                      				ldi r17, 0x00
+00005f d09c                      				RCALL set_cursor_position
+000060 e200                      				ldi r16, ' ' //costum character
+000061 d06b                      				RCALL data_wrt
                                  
-000060 c000                      				rjmp render_trex_char
+000062 c000                      				rjmp render_trex_char
                                  
                                  			render_trex_char:
-000061 2d00                      				mov r16, r0
-000062 2d12                      				mov r17, r2
-000063 d08b                      				RCALL set_cursor_position
-000064 ef0c                      				ldi r16, 0b11111100 //TREX
-000065 d05a                      				RCALL data_wrt
+000063 2d00                      				mov r16, r0
+000064 2d12                      				mov r17, r2
+000065 d096                      				RCALL set_cursor_position
+000066 ef0c                      				ldi r16, 0b11111100 //TREX
+000067 d065                      				RCALL data_wrt
                                  
                                  
                                  		  render_cactus:
                                  
-000066 e011                      			ldi r17, 0x01
-000067 2d01                      			mov r16, r1
-000068 d086                      			RCALL set_cursor_position
+000068 e011                      			ldi r17, 0x01
+000069 2d01                      			mov r16, r1
+00006a d091                      			RCALL set_cursor_position
                                  
                                  
                                  			//izbira costum characterja:
                                  
-000069 9100 0200                 			lds r16, 0x0200
-00006b 3004                      			cpi r16, 0b0000_0100
-00006c f019                      			breq kind_char
+00006b 9100 0200                 			lds r16, 0x0200
+00006d 3004                      			cpi r16, 0b0000_0100
+00006e f019                      			breq kind_char
                                  
                                  			enemy_char:
-00006d e70f                      				ldi r16, 0b0111_1111 
-00006e d051                      				RCALL data_wrt
-00006f c003                      				rjmp render_cactus_bridge
+00006f e70f                      				ldi r16, 0b0111_1111 
+000070 d05c                      				RCALL data_wrt
+000071 c003                      				rjmp render_cactus_bridge
                                  
                                  			kind_char:
-000070 ef0f                      				ldi r16, 0b1111_1111
-000071 d04e                      				RCALL data_wrt
-000072 c000                      				rjmp render_cactus_bridge
+000072 ef0f                      				ldi r16, 0b1111_1111
+000073 d059                      				RCALL data_wrt
+000074 c000                      				rjmp render_cactus_bridge
                                  
                                  			render_cactus_bridge:
-000073 e011                      			ldi r17, 0x01
-000074 2d01                      			mov r16, r1
-000075 9503                      			inc r16
-000076 d078                      			RCALL set_cursor_position
-000077 e200                      			ldi r16, ' ' //costum character
-000078 d047                      			RCALL data_wrt
+000075 e011                      			ldi r17, 0x01
+000076 2d01                      			mov r16, r1
+000077 9503                      			inc r16
+000078 d083                      			RCALL set_cursor_position
+000079 e200                      			ldi r16, ' ' //costum character
+00007a d052                      			RCALL data_wrt
                                  			
                                  
                                  
                                  
                                  		//check if backlight turned on/off
-000079 2d00                      		mov r16, r0
-00007a 940e 01bb                 		call remainder5
-00007c 3000                      		cpi r16, 0x00
-00007d f411                      		brne backlight_on
-00007e 982a                      		cbi   PORTB, 2 //BACKLIGHT OFF
-00007f c001                      		rjmp offscreen_check
+00007b 2d00                      		mov r16, r0
+00007c 940e 01c8                 		call remainder5
+00007e 3000                      		cpi r16, 0x00
+00007f f411                      		brne backlight_on
+000080 982a                      		cbi   PORTB, 2 //BACKLIGHT OFF
+000081 c001                      		rjmp offscreen_check
                                  		
                                  
                                  		backlight_on:
-000080 9a2a                      			sbi   PORTB, 2 //BACKLIGHT ON
+000082 9a2a                      			sbi   PORTB, 2 //BACKLIGHT ON
                                  
                                  
                                  
                                  		//check if offscreen
                                  		offscreen_check:
-000081 2d01                      		mov r16, r1
-000082 3000                      		cpi r16, 0x00
-000083 f009                      		breq set_cactus_position_onscreen
-000084 cf99                      		rjmp render
+000083 2d01                      		mov r16, r1
+000084 3000                      		cpi r16, 0x00
+000085 f009                      		breq set_cactus_position_onscreen
+000086 cf97                      		rjmp render
                                  
                                  		set_cactus_position_onscreen:
-000085 e00f                      			ldi r16, 15
-000086 2e10                      			mov r1, r16 
+000087 e00f                      			ldi r16, 15
+000088 2e10                      			mov r1, r16 
                                  		
-000087 9100 0200                 			lds r16, 0x0200
-000089 9503                      			inc r16
-00008a 7007                      			andi r16, 0b0000_0111
-00008b 9300 0200                 			sts 0x0200, r16
+000089 9100 0200                 			lds r16, 0x0200
+00008b 9503                      			inc r16
+00008c 7007                      			andi r16, 0b0000_0111
+00008d 9300 0200                 			sts 0x0200, r16
                                  
-00008d e011                      			ldi r17, 0x01
-00008e e000                      			ldi r16, 0x00
-00008f d05f                      			RCALL set_cursor_position
-000090 e200                      			ldi r16, ' '
-000091 d02e                      			RCALL data_wrt
-000092 9433                      			inc r3  //poveèamo score
+00008f e011                      			ldi r17, 0x01
+000090 e000                      			ldi r16, 0x00
+000091 d06a                      			RCALL set_cursor_position
+000092 e200                      			ldi r16, ' '
+000093 d039                      			RCALL data_wrt
+000094 9433                      			inc r3  //poveèamo score
                                  
                                  
                                  
-000093 cf8a                            RJMP  render 
+000095 cf88                            RJMP  render 
                                  
                                  	  game_over:
-000094 940e 011b                 		call game_over_sign
+000096 940e 0128                 		call game_over_sign
                                  
-000096 940e 0144                 		call print_score
+000098 940e 0151                 		call print_score
                                  
                                  		aftermath:
-                                 			//naredi možnost reseta
-000098 cfff                      			rjmp aftermath
+                                 			//delayamo, za long press
+00009a e01e                      			ldi r17, 14
+                                 			long_press_detection_loop:
+00009b ef0f                      				ldi r16, 0xFF
+00009c 940e 00f3                 				call render_delay
+00009e 951a                      				dec r17
+00009f 2311                      				tst r17
+0000a0 f7d1                      				brne long_press_detection_loop
+                                 
+                                 			button_pressed_reset_activation:
+0000a1 991c                      				sbic PINb,4
+0000a2 c001                      				rjmp execute_reset
+0000a3 cff6                      				rjmp aftermath
+                                 
+                                 			execute_reset:
+                                 				//Èe dost èasa držimo:
+0000a4 cf5b                      				rjmp 0x00
+                                 
+0000a5 cff4                      			rjmp aftermath
                                  
                                  		GAME_ON:
-000099 940e 0167                 			call game_on_sign
-00009b cffc                      			rjmp aftermath
+0000a6 940e 0174                 			call game_on_sign
+0000a8 cff1                      			rjmp aftermath
                                  
                                  
                                  
                                  ;================================================================
                                  LCD_init:
-00009c 930f                      	  push r16
-00009d e303                            LDI   R16, 0x33         ;init LCD for 4-bit data
-00009e d00c                            RCALL command_wrt       ;send to command register
-00009f e302                            LDI   R16, 0x32         ;init LCD for 4-bit data
-0000a0 d00a                            RCALL command_wrt
-0000a1 e208                            LDI   R16, 0x28         ;LCD 2 lines, 5x7 matrix
-0000a2 d008                            RCALL command_wrt
-0000a3 e00c                            LDI   R16, 0x0C         ;disp ON, cursor OFF
-0000a4 d006                            RCALL command_wrt
-0000a5 e001                            LDI   R16, 0x01         ;clear LCD
-0000a6 d004                            RCALL command_wrt
-0000a7 e006                            LDI   R16, 0x06         ;shift cursor right
-0000a8 d002                            RCALL command_wrt
-0000a9 910f                      	  pop r16
-0000aa 9508                            RET  
+0000a9 930f                      	  push r16
+0000aa e303                            LDI   R16, 0x33         ;init LCD for 4-bit data
+0000ab d00c                            RCALL command_wrt       ;send to command register
+0000ac e302                            LDI   R16, 0x32         ;init LCD for 4-bit data
+0000ad d00a                            RCALL command_wrt
+0000ae e208                            LDI   R16, 0x28         ;LCD 2 lines, 5x7 matrix
+0000af d008                            RCALL command_wrt
+0000b0 e00c                            LDI   R16, 0x0C         ;disp ON, cursor OFF
+0000b1 d006                            RCALL command_wrt
+0000b2 e001                            LDI   R16, 0x01         ;clear LCD
+0000b3 d004                            RCALL command_wrt
+0000b4 e006                            LDI   R16, 0x06         ;shift cursor right
+0000b5 d002                            RCALL command_wrt
+0000b6 910f                      	  pop r16
+0000b7 9508                            RET  
                                  ;================================================================
                                  command_wrt:
-0000ab 930f                      	  push r16
-0000ac 93bf                      	  push r27
-0000ad 2fb0                            MOV   R27, R16
-0000ae 7fb0                            ANDI  R27, 0xF0         ;mask low nibble & keep high nibble
-0000af b9bb                            OUT   PORTD, R27        ;o/p high nibble to port D
-0000b0 9829                            CBI   PORTB, 1          ;RS = 0 for command
-0000b1 9a28                            SBI   PORTB, 0          ;EN = 1
-0000b2 d022                            RCALL delay_short       ;widen EN pulse
-0000b3 9828                            CBI   PORTB, 0          ;EN = 0 for H-to-L pulse
-0000b4 d023                            RCALL delay_us          ;delay in micro seconds
+0000b8 930f                      	  push r16
+0000b9 93bf                      	  push r27
+0000ba 2fb0                            MOV   R27, R16
+0000bb 7fb0                            ANDI  R27, 0xF0         ;mask low nibble & keep high nibble
+0000bc b9bb                            OUT   PORTD, R27        ;o/p high nibble to port D
+0000bd 9829                            CBI   PORTB, 1          ;RS = 0 for command
+0000be 9a28                            SBI   PORTB, 0          ;EN = 1
+0000bf d022                            RCALL delay_short       ;widen EN pulse
+0000c0 9828                            CBI   PORTB, 0          ;EN = 0 for H-to-L pulse
+0000c1 d023                            RCALL delay_us          ;delay in micro seconds
                                        ;----------------------------------------------------
-0000b5 2fb0                            MOV   R27, R16
-0000b6 95b2                            SWAP  R27               ;swap nibbles
-0000b7 7fb0                            ANDI  R27, 0xF0         ;mask low nibble & keep high nibble
-0000b8 b9bb                            OUT   PORTD, R27        ;o/p high nibble to port D
-0000b9 9a28                            SBI   PORTB, 0          ;EN = 1
-0000ba d01a                            RCALL delay_short       ;widen EN pulse
-0000bb 9828                            CBI   PORTB, 0          ;EN = 0 for H-to-L pulse
-0000bc d01b                            RCALL delay_us          ;delay in micro seconds
+0000c2 2fb0                            MOV   R27, R16
+0000c3 95b2                            SWAP  R27               ;swap nibbles
+0000c4 7fb0                            ANDI  R27, 0xF0         ;mask low nibble & keep high nibble
+0000c5 b9bb                            OUT   PORTD, R27        ;o/p high nibble to port D
+0000c6 9a28                            SBI   PORTB, 0          ;EN = 1
+0000c7 d01a                            RCALL delay_short       ;widen EN pulse
+0000c8 9828                            CBI   PORTB, 0          ;EN = 0 for H-to-L pulse
+0000c9 d01b                            RCALL delay_us          ;delay in micro seconds
                                  	  ;---------------------------------------------------
-0000bd 91bf                      	  pop r27
-0000be 910f                      	  pop r16
-0000bf 9508                            RET
+0000ca 91bf                      	  pop r27
+0000cb 910f                      	  pop r16
+0000cc 9508                            RET
                                  ;================================================================
                                  data_wrt:
-0000c0 930f                      	  push  r16
-0000c1 93bf                      	  push r27
-0000c2 2fb0                            MOV   R27, R16
-0000c3 7fb0                            ANDI  R27, 0xF0         ;mask low nibble & keep high nibble
-0000c4 b9bb                            OUT   PORTD, R27        ;o/p high nibble to port D
-0000c5 9a29                            SBI   PORTB, 1          ;RS = 1 for data
-0000c6 9a28                            SBI   PORTB, 0          ;EN = 1
-0000c7 d00d                            RCALL delay_short       ;make wide EN pulse
-0000c8 9828                            CBI   PORTB, 0          ;EN = 0 for H-to-L pulse
-0000c9 d00e                            RCALL delay_us          ;delay in micro seconds
+0000cd 930f                      	  push  r16
+0000ce 93bf                      	  push r27
+0000cf 2fb0                            MOV   R27, R16
+0000d0 7fb0                            ANDI  R27, 0xF0         ;mask low nibble & keep high nibble
+0000d1 b9bb                            OUT   PORTD, R27        ;o/p high nibble to port D
+0000d2 9a29                            SBI   PORTB, 1          ;RS = 1 for data
+0000d3 9a28                            SBI   PORTB, 0          ;EN = 1
+0000d4 d00d                            RCALL delay_short       ;make wide EN pulse
+0000d5 9828                            CBI   PORTB, 0          ;EN = 0 for H-to-L pulse
+0000d6 d00e                            RCALL delay_us          ;delay in micro seconds
                                        ;----------------------------------------------------
-0000ca 2fb0                            MOV   R27, R16
-0000cb 95b2                            SWAP  R27               ;swap nibbles
-0000cc 7fb0                            ANDI  R27, 0xF0         ;mask low nibble & keep high nibble
-0000cd b9bb                            OUT   PORTD, R27        ;o/p high nibble to port D
-0000ce 9a28                            SBI   PORTB, 0          ;EN = 1
-0000cf d005                            RCALL delay_short       ;widen EN pulse
-0000d0 9828                            CBI   PORTB, 0          ;EN = 0 for H-to-L pulse
-0000d1 d006                            RCALL delay_us          ;delay in micro seconds
-0000d2 91bf                      	  pop r27
-0000d3 910f                      	  pop r16
-0000d4 9508                            RET
+0000d7 2fb0                            MOV   R27, R16
+0000d8 95b2                            SWAP  R27               ;swap nibbles
+0000d9 7fb0                            ANDI  R27, 0xF0         ;mask low nibble & keep high nibble
+0000da b9bb                            OUT   PORTD, R27        ;o/p high nibble to port D
+0000db 9a28                            SBI   PORTB, 0          ;EN = 1
+0000dc d005                            RCALL delay_short       ;widen EN pulse
+0000dd 9828                            CBI   PORTB, 0          ;EN = 0 for H-to-L pulse
+0000de d006                            RCALL delay_us          ;delay in micro seconds
+0000df 91bf                      	  pop r27
+0000e0 910f                      	  pop r16
+0000e1 9508                            RET
                                  ;================================================================
                                  delay_short:
-0000d5 0000                            NOP
-0000d6 0000                            NOP
-0000d7 9508                            RET
+0000e2 0000                            NOP
+0000e3 0000                            NOP
+0000e4 9508                            RET
                                  ;------------------------
                                  delay_us:
-0000d8 934f                      	  push r20
-0000d9 e54a                            LDI   R20, 90
-0000da dffa                      l3:   RCALL delay_short
-0000db 954a                            DEC   R20
-0000dc f7e9                            BRNE  l3
-0000dd 914f                      	  pop r20
-0000de 9508                            RET
+0000e5 934f                      	  push r20
+0000e6 e54a                            LDI   R20, 90
+0000e7 dffa                      l3:   RCALL delay_short
+0000e8 954a                            DEC   R20
+0000e9 f7e9                            BRNE  l3
+0000ea 914f                      	  pop r20
+0000eb 9508                            RET
                                  ;-----------------------
                                  delay_ms:
-0000df 935f                      	  push r21
-0000e0 e258                            LDI   R21, 40
-0000e1 dff6                      l4:   RCALL delay_us
-0000e2 955a                            DEC   R21
-0000e3 f7e9                            BRNE  l4
-0000e4 915f                      	  pop r21
-0000e5 9508                            RET
+0000ec 935f                      	  push r21
+0000ed e258                            LDI   R21, 40
+0000ee dff6                      l4:   RCALL delay_us
+0000ef 955a                            DEC   R21
+0000f0 f7e9                            BRNE  l4
+0000f1 915f                      	  pop r21
+0000f2 9508                            RET
                                  ;================================================================
                                  render_delay:
                                  //input v r16 (0-255)
                                  
                                  	one_ms:
-0000e6 e02a                      			ldi  r18, 10
-0000e7 e03f                      			ldi  r19, 15
-0000e8 953a                      		L1: dec  r19
-0000e9 f7f1                      			brne L1
-0000ea 952a                      			dec  r18
-0000eb f7e1                      			brne L1
+0000f3 e02a                      			ldi  r18, 10
+0000f4 e03f                      			ldi  r19, 15
+0000f5 953a                      		L1: dec  r19
+0000f6 f7f1                      			brne L1
+0000f7 952a                      			dec  r18
+0000f8 f7e1                      			brne L1
                                  
-0000ec 950a                      			dec r16
-0000ed f7c1                      			brne one_ms
-0000ee 9508                      	ret
+0000f9 950a                      			dec r16
+0000fa f7c1                      			brne one_ms
+0000fb 9508                      	ret
                                  ;================================================================
                                  set_cursor_position:
-0000ef 930f                      	push r16
-0000f0 931f                      	push r17
+0000fc 930f                      	push r16
+0000fd 931f                      	push r17
                                  
-0000f1 2f21                      	mov r18, r17
-0000f2 2f10                      	mov r17, r16
-0000f3 3020                      	cpi r18, 0x00
-0000f4 f409                      	brne second_row
-0000f5 c004                      	rjmp first_row
+0000fe 2f21                      	mov r18, r17
+0000ff 2f10                      	mov r17, r16
+000100 3020                      	cpi r18, 0x00
+000101 f409                      	brne second_row
+000102 c004                      	rjmp first_row
                                  	
                                  	second_row:
-0000f6 ec00                      		ldi r16, 0xC0
-0000f7 dfb3                      		RCALL command_wrt
-0000f8 dfe6                      		RCALL delay_ms
-0000f9 c004                      		rjmp set_cursor_position_compare
+000103 ec00                      		ldi r16, 0xC0
+000104 dfb3                      		RCALL command_wrt
+000105 dfe6                      		RCALL delay_ms
+000106 c004                      		rjmp set_cursor_position_compare
                                  	first_row:
-0000fa e800                      		ldi r16, 0x80
-0000fb dfaf                      		RCALL command_wrt
-0000fc dfe2                      		RCALL delay_ms
-0000fd c000                      		rjmp set_cursor_position_compare
+000107 e800                      		ldi r16, 0x80
+000108 dfaf                      		RCALL command_wrt
+000109 dfe2                      		RCALL delay_ms
+00010a c000                      		rjmp set_cursor_position_compare
                                  
                                  	set_cursor_position_compare:
-0000fe 3010                      		cpi r17, 0x00
-0000ff f031                      		breq set_cursor_position_end
+00010b 3010                      		cpi r17, 0x00
+00010c f031                      		breq set_cursor_position_end
                                  
                                  
                                  	cursor_position_loop:
-000100 e104                      		ldi r16, 0x14
-000101 dfa9                      		RCALL command_wrt
-000102 dfdc                      		RCALL delay_ms
-000103 951a                      		dec r17
-000104 f7d9                      		brne cursor_position_loop
-000105 c000                      		rjmp set_cursor_position_end
+00010d e104                      		ldi r16, 0x14
+00010e dfa9                      		RCALL command_wrt
+00010f dfdc                      		RCALL delay_ms
+000110 951a                      		dec r17
+000111 f7d9                      		brne cursor_position_loop
+000112 c000                      		rjmp set_cursor_position_end
                                  
                                  	set_cursor_position_end:
-000106 911f                      		pop r17
-000107 910f                      		pop r16
-000108 9508                      		ret
+000113 911f                      		pop r17
+000114 910f                      		pop r16
+000115 9508                      		ret
                                  
                                  ;--------------------------------------------
                                  random_number:
-000109 0f03                      	add r16, r19
-00010a 9502                      	swap r16
-00010b 1f04                      	adc r16, r20
-00010c 9502                      	swap r16
-00010d 1f05                      	adc r16, r21
-00010e 9502                      	swap r16
-00010f 1f06                      	adc r16, r22
-000110 9502                      	swap r16
-000111 1f07                      	adc r16, r23
-000112 1d00                      	adc r16, r0
-000113 9502                      	swap r16
-000114 1d01                      	adc r16, r1
-000115 0f00                      	lsl r16
-000116 9502                      	swap r16
-000117 9507                      	ror r16
-000118 9502                      	swap r16
-000119 700f                      	andi r16, 0b0000_1111
-00011a 9508                      	ret
+000116 0f03                      	add r16, r19
+000117 9502                      	swap r16
+000118 1f04                      	adc r16, r20
+000119 9502                      	swap r16
+00011a 1f05                      	adc r16, r21
+00011b 9502                      	swap r16
+00011c 1f06                      	adc r16, r22
+00011d 9502                      	swap r16
+00011e 1f07                      	adc r16, r23
+00011f 1d00                      	adc r16, r0
+000120 9502                      	swap r16
+000121 1d01                      	adc r16, r1
+000122 0f00                      	lsl r16
+000123 9502                      	swap r16
+000124 9507                      	ror r16
+000125 9502                      	swap r16
+000126 700f                      	andi r16, 0b0000_1111
+000127 9508                      	ret
                                  	
                                  ;--------------------------------------------
                                  game_over_sign:
-00011b e000                      	ldi r16, 0
-00011c dfd2                      		RCALL set_cursor_position
-00011d e407                      		ldi r16, 'G'
-00011e dfa1                      		RCALL data_wrt
-00011f e001                      		ldi r16, 1
-000120 dfce                      		RCALL set_cursor_position
-000121 e601                      		ldi r16, 'a'
-000122 df9d                      		RCALL data_wrt
-000123 e002                      		ldi r16, 2
-000124 dfca                      		RCALL set_cursor_position
-000125 e60d                      		ldi r16, 'm'
-000126 df99                      		RCALL data_wrt
-000127 e003                      		ldi r16, 3
-000128 dfc6                      		RCALL set_cursor_position
-000129 e605                      		ldi r16, 'e'
-00012a df95                      		RCALL data_wrt
-00012b e004                      		ldi r16, 4
-00012c dfc2                      		RCALL set_cursor_position
-00012d e200                      		ldi r16, ' '
-00012e df91                      		RCALL data_wrt
-00012f e005                      		ldi r16, 5
-000130 dfbe                      		RCALL set_cursor_position
-000131 e60f                      		ldi r16, 'o'
-000132 df8d                      		RCALL data_wrt
-000133 e006                      		ldi r16, 6
-000134 dfba                      		RCALL set_cursor_position
-000135 e706                      		ldi r16, 'v'
-000136 df89                      		RCALL data_wrt
-000137 e007                      		ldi r16, 7
-000138 dfb6                      		RCALL set_cursor_position
-000139 e605                      		ldi r16, 'e'
-00013a df85                      		RCALL data_wrt
-00013b e008                      		ldi r16, 8
-00013c dfb2                      		RCALL set_cursor_position
-00013d e702                      		ldi r16, 'r'
-00013e df81                      		RCALL data_wrt
-00013f e009                      		ldi r16, 9
-000140 dfae                      		RCALL set_cursor_position
-000141 e201                      		ldi r16, '!'
-000142 df7d                      		RCALL data_wrt
-000143 9508                      		ret
+000128 e000                      	ldi r16, 0
+000129 dfd2                      		RCALL set_cursor_position
+00012a e407                      		ldi r16, 'G'
+00012b dfa1                      		RCALL data_wrt
+00012c e001                      		ldi r16, 1
+00012d dfce                      		RCALL set_cursor_position
+00012e e601                      		ldi r16, 'a'
+00012f df9d                      		RCALL data_wrt
+000130 e002                      		ldi r16, 2
+000131 dfca                      		RCALL set_cursor_position
+000132 e60d                      		ldi r16, 'm'
+000133 df99                      		RCALL data_wrt
+000134 e003                      		ldi r16, 3
+000135 dfc6                      		RCALL set_cursor_position
+000136 e605                      		ldi r16, 'e'
+000137 df95                      		RCALL data_wrt
+000138 e004                      		ldi r16, 4
+000139 dfc2                      		RCALL set_cursor_position
+00013a e200                      		ldi r16, ' '
+00013b df91                      		RCALL data_wrt
+00013c e005                      		ldi r16, 5
+00013d dfbe                      		RCALL set_cursor_position
+00013e e60f                      		ldi r16, 'o'
+00013f df8d                      		RCALL data_wrt
+000140 e006                      		ldi r16, 6
+000141 dfba                      		RCALL set_cursor_position
+000142 e706                      		ldi r16, 'v'
+000143 df89                      		RCALL data_wrt
+000144 e007                      		ldi r16, 7
+000145 dfb6                      		RCALL set_cursor_position
+000146 e605                      		ldi r16, 'e'
+000147 df85                      		RCALL data_wrt
+000148 e008                      		ldi r16, 8
+000149 dfb2                      		RCALL set_cursor_position
+00014a e702                      		ldi r16, 'r'
+00014b df81                      		RCALL data_wrt
+00014c e009                      		ldi r16, 9
+00014d dfae                      		RCALL set_cursor_position
+00014e e201                      		ldi r16, '!'
+00014f df7d                      		RCALL data_wrt
+000150 9508                      		ret
                                  
                                  ;--------------------------------------------
                                  print_score:
-000144 2711                      		clr r17
-000145 e000                      		ldi r16, 0
-000146 dfa8                      		RCALL set_cursor_position
+000151 2711                      		clr r17
+000152 e000                      		ldi r16, 0
+000153 dfa8                      		RCALL set_cursor_position
                                  
-000147 e503                      		ldi r16, 'S'
-000148 df77                      		RCALL data_wrt
-000149 e603                      		ldi r16, 'c'
-00014a df75                      		RCALL data_wrt
-00014b e60f                      		ldi r16, 'o'
-00014c df73                      		RCALL data_wrt
-00014d e702                      		ldi r16, 'r'
-00014e df71                      		RCALL data_wrt
-00014f e605                      		ldi r16, 'e'
-000150 df6f                      		RCALL data_wrt
-000151 e200                      		ldi r16, ' '
-000152 df6d                      		RCALL data_wrt
+000154 e503                      		ldi r16, 'S'
+000155 df77                      		RCALL data_wrt
+000156 e603                      		ldi r16, 'c'
+000157 df75                      		RCALL data_wrt
+000158 e60f                      		ldi r16, 'o'
+000159 df73                      		RCALL data_wrt
+00015a e702                      		ldi r16, 'r'
+00015b df71                      		RCALL data_wrt
+00015c e605                      		ldi r16, 'e'
+00015d df6f                      		RCALL data_wrt
+00015e e200                      		ldi r16, ' '
+00015f df6d                      		RCALL data_wrt
                                  
                                  
-000153 2d03                      		mov r16, r3
-000154 d037                      		RCALL convert_to_ascii
-000155 2f03                      		mov r16, r19
-000156 df69                      		RCALL data_wrt
-000157 df87                      		RCALL delay_ms
+000160 2d03                      		mov r16, r3
+000161 d037                      		RCALL convert_to_ascii
+000162 2f03                      		mov r16, r19
+000163 df69                      		RCALL data_wrt
+000164 df87                      		RCALL delay_ms
                                  
-000158 2d03                      		mov r16, r3
-000159 d032                      		RCALL convert_to_ascii
-00015a 2f02                      		mov r16, r18
-00015b df64                      		RCALL data_wrt
-00015c df82                      		RCALL delay_ms
+000165 2d03                      		mov r16, r3
+000166 d032                      		RCALL convert_to_ascii
+000167 2f02                      		mov r16, r18
+000168 df64                      		RCALL data_wrt
+000169 df82                      		RCALL delay_ms
                                  
-00015d 2d03                      		mov r16, r3
-00015e d02d                      		RCALL convert_to_ascii
-00015f 2f01                      		mov r16, r17
-000160 df5f                      		RCALL data_wrt
-000161 df7d                      		RCALL delay_ms
+00016a 2d03                      		mov r16, r3
+00016b d02d                      		RCALL convert_to_ascii
+00016c 2f01                      		mov r16, r17
+00016d df5f                      		RCALL data_wrt
+00016e df7d                      		RCALL delay_ms
                                  
-000162 e200                      		ldi r16, ' '
-000163 df5c                      		RCALL data_wrt
-000164 df7a                      		RCALL delay_ms
+00016f e200                      		ldi r16, ' '
+000170 df5c                      		RCALL data_wrt
+000171 df7a                      		RCALL delay_ms
                                  	
-000165 e011                      		ldi r17, 0x01
-000166 9508                      		ret
+000172 e011                      		ldi r17, 0x01
+000173 9508                      		ret
                                  
                                  ;--------------------------------------------
                                  
                                  game_on_sign:
-000167 e000                      	ldi r16, 0
-000168 df86                      		RCALL set_cursor_position
-000169 e407                      		ldi r16, 'G'
-00016a df55                      		RCALL data_wrt
-00016b e001                      		ldi r16, 1
-00016c df82                      		RCALL set_cursor_position
-00016d e601                      		ldi r16, 'a'
-00016e df51                      		RCALL data_wrt
-00016f e002                      		ldi r16, 2
-000170 df7e                      		RCALL set_cursor_position
-000171 e60d                      		ldi r16, 'm'
-000172 df4d                      		RCALL data_wrt
-000173 e003                      		ldi r16, 3
-000174 df7a                      		RCALL set_cursor_position
-000175 e605                      		ldi r16, 'e'
-000176 df49                      		RCALL data_wrt
-000177 e004                      		ldi r16, 4
-000178 df76                      		RCALL set_cursor_position
-000179 e200                      		ldi r16, ' '
-00017a df45                      		RCALL data_wrt
-00017b e005                      		ldi r16, 5
-00017c df72                      		RCALL set_cursor_position
-00017d e40f                      		ldi r16, 'O'
-00017e df41                      		RCALL data_wrt
-00017f e006                      		ldi r16, 6
-000180 df6e                      		RCALL set_cursor_position
-000181 e40e                      		ldi r16, 'N'
-000182 df3d                      		RCALL data_wrt
-000183 e007                      		ldi r16, 7
-000184 df6a                      		RCALL set_cursor_position
-000185 e30b                      		ldi r16, ';'
-000186 df39                      		RCALL data_wrt
-000187 e008                      		ldi r16, 8
-000188 df66                      		RCALL set_cursor_position
-000189 e209                      		ldi r16, ')'
-00018a df35                      		RCALL data_wrt
-00018b 9508                      		ret
+000174 e000                      	ldi r16, 0
+000175 df86                      		RCALL set_cursor_position
+000176 e407                      		ldi r16, 'G'
+000177 df55                      		RCALL data_wrt
+000178 e001                      		ldi r16, 1
+000179 df82                      		RCALL set_cursor_position
+00017a e601                      		ldi r16, 'a'
+00017b df51                      		RCALL data_wrt
+00017c e002                      		ldi r16, 2
+00017d df7e                      		RCALL set_cursor_position
+00017e e60d                      		ldi r16, 'm'
+00017f df4d                      		RCALL data_wrt
+000180 e003                      		ldi r16, 3
+000181 df7a                      		RCALL set_cursor_position
+000182 e605                      		ldi r16, 'e'
+000183 df49                      		RCALL data_wrt
+000184 e004                      		ldi r16, 4
+000185 df76                      		RCALL set_cursor_position
+000186 e200                      		ldi r16, ' '
+000187 df45                      		RCALL data_wrt
+000188 e005                      		ldi r16, 5
+000189 df72                      		RCALL set_cursor_position
+00018a e40f                      		ldi r16, 'O'
+00018b df41                      		RCALL data_wrt
+00018c e006                      		ldi r16, 6
+00018d df6e                      		RCALL set_cursor_position
+00018e e40e                      		ldi r16, 'N'
+00018f df3d                      		RCALL data_wrt
+000190 e007                      		ldi r16, 7
+000191 df6a                      		RCALL set_cursor_position
+000192 e30b                      		ldi r16, ';'
+000193 df39                      		RCALL data_wrt
+000194 e008                      		ldi r16, 8
+000195 df66                      		RCALL set_cursor_position
+000196 e209                      		ldi r16, ')'
+000197 df35                      		RCALL data_wrt
+000198 9508                      		ret
                                  
                                  
                                  ;--------------------------------------------
                                  convert_to_ascii:
-00018c 920f                      	push r0
-00018d 921f                      	push r1
-00018e 2f10                      	mov r17, r16
-00018f 940e 01b3                 	call div
-000191 940e 01b3                 	call div
-000193 933f                      	push r19
-000194 2f10                      	mov r17, r16
-000195 e02a                      	ldi r18, 10
-000196 9f23                      	mul r18, r19
-000197 2d40                      	mov r20, r0
-000198 940e 01b3                 	call div
-00019a 1b14                      	sub r17, r20
-00019b 931f                      	push r17
-00019c 2f10                      	mov r17, r16
-00019d 940e 01b3                 	call div
-00019f e02a                      	ldi r18, 10
-0001a0 9f12                      	mul r17, r18
-0001a1 2d20                      	mov r18, r0
-0001a2 2f30                      	mov r19, r16
-0001a3 1b32                      	sub r19, r18
-0001a4 933f                      	push r19
-0001a5 2711                      	clr r17
-0001a6 2722                      	clr r18
-0001a7 2733                      	clr r19
-0001a8 e340                      	ldi r20, '0'
-0001a9 911f                      	pop r17 //lsb
-0001aa 912f                      	pop r18
-0001ab 913f                      	pop r19 //msb
-0001ac 0f14                      	add r17, r20
-0001ad 0f24                      	add r18, r20
-0001ae 0f34                      	add r19, r20
-0001af 2744                      	clr r20
-0001b0 901f                      	pop r1
-0001b1 900f                      	pop r0
-0001b2 9508                      	ret
+000199 920f                      	push r0
+00019a 921f                      	push r1
+00019b 2f10                      	mov r17, r16
+00019c 940e 01c0                 	call div
+00019e 940e 01c0                 	call div
+0001a0 933f                      	push r19
+0001a1 2f10                      	mov r17, r16
+0001a2 e02a                      	ldi r18, 10
+0001a3 9f23                      	mul r18, r19
+0001a4 2d40                      	mov r20, r0
+0001a5 940e 01c0                 	call div
+0001a7 1b14                      	sub r17, r20
+0001a8 931f                      	push r17
+0001a9 2f10                      	mov r17, r16
+0001aa 940e 01c0                 	call div
+0001ac e02a                      	ldi r18, 10
+0001ad 9f12                      	mul r17, r18
+0001ae 2d20                      	mov r18, r0
+0001af 2f30                      	mov r19, r16
+0001b0 1b32                      	sub r19, r18
+0001b1 933f                      	push r19
+0001b2 2711                      	clr r17
+0001b3 2722                      	clr r18
+0001b4 2733                      	clr r19
+0001b5 e340                      	ldi r20, '0'
+0001b6 911f                      	pop r17 //lsb
+0001b7 912f                      	pop r18
+0001b8 913f                      	pop r19 //msb
+0001b9 0f14                      	add r17, r20
+0001ba 0f24                      	add r18, r20
+0001bb 0f34                      	add r19, r20
+0001bc 2744                      	clr r20
+0001bd 901f                      	pop r1
+0001be 900f                      	pop r0
+0001bf 9508                      	ret
                                  
                                  	div:
-0001b3 2733                      		clr r19
-0001b4 e02a                      		ldi r18, 10
+0001c0 2733                      		clr r19
+0001c1 e02a                      		ldi r18, 10
                                  		div_loop:
-0001b5 1b12                      			sub r17, r18
-0001b6 f010                      			brcs terminate
-0001b7 9533                      			inc r19	
-0001b8 cffc                      			rjmp div_loop
+0001c2 1b12                      			sub r17, r18
+0001c3 f010                      			brcs terminate
+0001c4 9533                      			inc r19	
+0001c5 cffc                      			rjmp div_loop
                                  
                                  	terminate:
-0001b9 2f13                      		mov r17, r19
-0001ba 9508                      		ret
+0001c6 2f13                      		mov r17, r19
+0001c7 9508                      		ret
                                  		
                                  ;--------------------------------------------
                                  remainder5:
-0001bb 931f                      		push r17
-0001bc 2711                      		clr r17
+0001c8 931f                      		push r17
+0001c9 2711                      		clr r17
                                  
                                  	remainder5_loop:
-0001bd 5005                      		subi r16, 0x05
-0001be f008                      		brcs remainder5_test
-0001bf cffd                      		rjmp remainder5_loop
+0001ca 5005                      		subi r16, 0x05
+0001cb f008                      		brcs remainder5_test
+0001cc cffd                      		rjmp remainder5_loop
                                  
                                  		remainder5_test:
-0001c0 e015                      			ldi r17, 0x05
-0001c1 0f01                      			add r16, r17
-0001c2 5005                      			subi r16, 0x05
-0001c3 f009                      			breq remainder5_true
-0001c4 c003                      			rjmp remainder5_false
+0001cd e015                      			ldi r17, 0x05
+0001ce 0f01                      			add r16, r17
+0001cf 5005                      			subi r16, 0x05
+0001d0 f009                      			breq remainder5_true
+0001d1 c003                      			rjmp remainder5_false
                                  		remainder5_true:
-0001c5 e000                      			ldi r16, 0x00
-0001c6 911f                      			pop r17
-0001c7 9508                      			ret
+0001d2 e000                      			ldi r16, 0x00
+0001d3 911f                      			pop r17
+0001d4 9508                      			ret
                                  		remainder5_false:
-0001c8 e015                      			ldi r17, 0x05
-0001c9 0f01                      			add r16, r17
-0001ca 911f                      			pop r17
-0001cb 9508                      			ret
-                                 			
+0001d5 e015                      			ldi r17, 0x05
+0001d6 0f01                      			add r16, r17
+0001d7 911f                      			pop r17
+0001d8 9508                      			ret
 
 
 RESOURCE USE INFORMATION
@@ -1623,9 +1641,9 @@ counted separately from r26..r31 here.
 .dseg memory usage only counts static data declared with .byte
 
 "ATmega328P" register use summary:
-x  :   0 y  :   0 z  :   0 r0 :  14 r1 :  10 r2 :   6 r3 :   5 r4 :   3 
+x  :   0 y  :   0 z  :   0 r0 :  14 r1 :  10 r2 :   6 r3 :   5 r4 :   5 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16: 154 r17:  35 r18:  18 r19:  17 r20:  18 
+r13:   0 r14:   0 r15:   0 r16: 155 r17:  38 r18:  18 r19:  17 r20:  18 
 r21:   5 r22:   4 r23:   3 r24:   8 r25:   0 r26:   0 r27:  18 r28:   0 
 r29:   0 r30:   0 r31:   0 
 Registers used: 15 out of 35 (42.9%)
@@ -1635,27 +1653,27 @@ Registers used: 15 out of 35 (42.9%)
 andi  :   6 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
 brcc  :   0 brcs  :   2 break :   0 breq  :  10 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :  10 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
-brvs  :   0 bset  :   0 bst   :   0 call  :   8 cbi   :   7 cbr   :   0 
+brne  :  11 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
+brvs  :   0 bset  :   0 bst   :   0 call  :   9 cbi   :   7 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :  12 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   1 cpc   :   0 
-cpi   :  12 cpse  :   0 dec   :  10 eor   :   0 fmul  :   0 fmuls :   0 
+cpi   :  12 cpse  :   0 dec   :  13 eor   :   0 fmul  :   0 fmuls :   0 
 fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   7 jmp   :   0 
-ld    :   0 ldd   :   0 ldi   :  96 lds   :   3 lpm   :   0 lsl   :   1 
+ld    :   0 ldd   :   0 ldi   :  98 lds   :   3 lpm   :   0 lsl   :   1 
 lsr   :   0 mov   :  41 movw  :   0 mul   :   2 muls  :   0 mulsu :   0 
 neg   :   0 nop   :   2 or    :   0 ori   :   0 out   :   6 pop   :  16 
-push  :  15 rcall :  98 ret   :  16 reti  :   0 rjmp  :  26 rol   :   0 
-ror   :   1 sbc   :   0 sbci  :   0 sbi   :   7 sbic  :   1 sbis  :   0 
+push  :  15 rcall :  98 ret   :  16 reti  :   0 rjmp  :  29 rol   :   0 
+ror   :   1 sbc   :   0 sbci  :   0 sbi   :   7 sbic  :   2 sbis  :   0 
 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
 sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   3 
-sub   :   3 subi  :   3 swap  :   9 tst   :   0 wdr   :   0 
-Instructions used: 32 out of 113 (28.3%)
+sub   :   3 subi  :   3 swap  :   9 tst   :   1 wdr   :   0 
+Instructions used: 33 out of 113 (29.2%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000398    920      0    920   32768   2.8%
+[.cseg] 0x000000 0x0003b2    946      0    946   32768   2.9%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

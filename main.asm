@@ -36,12 +36,12 @@ loop:
 
 	  clr r16
 	  sts 0x0200, r16 //beleženje KIND and Enemy characterjev
-	  clr r16 inc r16
+	  clr r16 inc r16 //nastavi na 1
 	  sts 0x0201, r16 //beleženje BACKLIGHT ON/OFF
 
 
 	  render:
-			dec r4
+			dec r4 dec r4 dec r4; ZManjšamo za 3
 			mov r16, r4
 			RCALL render_delay
 		  logic:
@@ -237,7 +237,24 @@ loop:
 		call print_score
 
 		aftermath:
-			//naredi možnost reseta
+			//delayamo, za long press
+			ldi r17, 14
+			long_press_detection_loop:
+				ldi r16, 0xFF
+				call render_delay
+				dec r17
+				tst r17
+				brne long_press_detection_loop
+
+			button_pressed_reset_activation:
+				sbic PINb,4
+				rjmp execute_reset
+				rjmp aftermath
+
+			execute_reset:
+				//Èe dost èasa držimo:
+				rjmp 0x00
+
 			rjmp aftermath
 
 		GAME_ON:
@@ -618,4 +635,4 @@ remainder5:
 			add r16, r17
 			pop r17
 			ret
-			
+		
