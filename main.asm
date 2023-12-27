@@ -1,7 +1,7 @@
 setup:
 
 	
-		
+	
 	  LDI   R16, 0xFF
       OUT   DDRD, R16         ;set port D o/p for data
       LDI   R16, 0b11110111
@@ -17,6 +17,7 @@ setup:
       ;-----------------------------------------------------
 
 loop:
+
 	  //init values
 	  SBI PORTB, 2 //BACKLIGHT ON
 	  ldi r18, 1  //trex position r0
@@ -38,7 +39,6 @@ loop:
 	  sts 0x0200, r16 //beleženje KIND and Enemy characterjev
 	  clr r16 inc r16 //nastavi na 1
 	  sts 0x0201, r16 //beleženje BACKLIGHT ON/OFF
-
 
 	  render:
 			dec r4 dec r4 dec r4; ZManjšamo za 3
@@ -232,6 +232,9 @@ loop:
       RJMP  render 
 
 	  game_over:
+		ldi r16, 1
+		RCALL command_wrt
+
 		call game_over_sign
 
 		call print_score
@@ -258,7 +261,18 @@ loop:
 			rjmp aftermath
 
 		GAME_ON:
+			ldi r16, 1
+			RCALL command_wrt
+
 			call game_on_sign
+			ldi r17, 0x01
+			ldi r16, 7
+			RCALL set_cursor_position
+			ldi r16, 0b11111100
+			RCALL data_wrt
+			ldi r16, 10
+			RCALL render_delay
+
 			rjmp aftermath
 
 
@@ -430,52 +444,34 @@ random_number:
 	
 ;--------------------------------------------
 game_over_sign:
-	ldi r16, 0
-		RCALL set_cursor_position
-		ldi r16, 'G'
-		RCALL data_wrt
-		ldi r16, 1
-		RCALL set_cursor_position
-		ldi r16, 'a'
-		RCALL data_wrt
-		ldi r16, 2
-		RCALL set_cursor_position
-		ldi r16, 'm'
-		RCALL data_wrt
+		ldi r17, 0x00
 		ldi r16, 3
 		RCALL set_cursor_position
+
+		ldi r16, 'G'
+		RCALL data_wrt
+		ldi r16, 'a'
+		RCALL data_wrt
+		ldi r16, 'm'
+		RCALL data_wrt
 		ldi r16, 'e'
 		RCALL data_wrt
-		ldi r16, 4
-		RCALL set_cursor_position
 		ldi r16, ' '
 		RCALL data_wrt
-		ldi r16, 5
-		RCALL set_cursor_position
 		ldi r16, 'o'
 		RCALL data_wrt
-		ldi r16, 6
-		RCALL set_cursor_position
 		ldi r16, 'v'
 		RCALL data_wrt
-		ldi r16, 7
-		RCALL set_cursor_position
 		ldi r16, 'e'
 		RCALL data_wrt
-		ldi r16, 8
-		RCALL set_cursor_position
 		ldi r16, 'r'
-		RCALL data_wrt
-		ldi r16, 9
-		RCALL set_cursor_position
-		ldi r16, '!'
 		RCALL data_wrt
 		ret
 
 ;--------------------------------------------
 print_score:
-		clr r17
-		ldi r16, 0
+		ldi r17, 1
+		ldi r16, 3
 		RCALL set_cursor_position
 
 		ldi r16, 'S'
@@ -520,41 +516,38 @@ print_score:
 ;--------------------------------------------
 
 game_on_sign:
-	ldi r16, 0
-		RCALL set_cursor_position
-		ldi r16, 'G'
-		RCALL data_wrt
-		ldi r16, 1
-		RCALL set_cursor_position
-		ldi r16, 'a'
-		RCALL data_wrt
-		ldi r16, 2
-		RCALL set_cursor_position
-		ldi r16, 'm'
-		RCALL data_wrt
-		ldi r16, 3
-		RCALL set_cursor_position
-		ldi r16, 'e'
-		RCALL data_wrt
+		ldi r17, 0
 		ldi r16, 4
 		RCALL set_cursor_position
-		ldi r16, ' '
+		ldi r16, 'Y'
 		RCALL data_wrt
 		ldi r16, 5
 		RCALL set_cursor_position
-		ldi r16, 'O'
+		ldi r16, 'o'
 		RCALL data_wrt
 		ldi r16, 6
 		RCALL set_cursor_position
-		ldi r16, 'N'
+		ldi r16, 'u'
 		RCALL data_wrt
 		ldi r16, 7
 		RCALL set_cursor_position
-		ldi r16, ';'
+		ldi r16, ' '
 		RCALL data_wrt
 		ldi r16, 8
 		RCALL set_cursor_position
-		ldi r16, ')'
+		ldi r16, 'W'
+		RCALL data_wrt
+		ldi r16, 9
+		RCALL set_cursor_position
+		ldi r16, 'o'
+		RCALL data_wrt
+		ldi r16, 10
+		RCALL set_cursor_position
+		ldi r16, 'n'
+		RCALL data_wrt
+		ldi r16, 11
+		RCALL set_cursor_position
+		ldi r16, ' '
 		RCALL data_wrt
 		ret
 
